@@ -16,7 +16,7 @@ Consistent with QCD predictions, gluon jets exhibit higher constituent multiplic
 
 ## Physics Background
 
-Jets are collimated sprays of hadrons produced when energetic quarks or gluons undergo parton showering and hadronization. In Quantum Chromodynamics (QCD), gluons carry a larger color factor (C_A = 3) compared to quarks (C_F = 4/3), leading to:
+Jets are collimated sprays of hadrons produced when energetic quarks or gluons undergo parton showering and hadronization. In Quantum Chromodynamics (QCD), gluons carry a larger color factor ($C_A = 3$) compared to quarks ($C_F = 4/3$), leading to:
 
 - **Higher particle multiplicities** in gluon jets
 - **Broader angular radiation** patterns for gluons
@@ -55,12 +55,12 @@ Each constituent has 4 features:
 
 | Index | Feature | Description |
 |-------|---------|-------------|
-| 0 | p_T | Transverse momentum |
-| 1 | y | Rapidity |
-| 2 | φ | Azimuthal angle |
+| 0 | $p_T$ | Transverse momentum |
+| 1 | $y$ | Rapidity |
+| 2 | $\varphi$ | Azimuthal angle |
 | 3 | pdgid | Particle ID |
 
-> Jets are zero-padded to a fixed maximum multiplicity. Constituents with p_T = 0 are padding and are excluded from all calculations.
+> Jets are zero-padded to a fixed maximum multiplicity. Constituents with $p_T = 0$ are padding and are excluded from all calculations.
 
 **Dataset summary:**
 - Total jets: 500,000
@@ -88,12 +88,12 @@ pip install numpy matplotlib scikit-learn
 
 ### 1. Data Loading & Exploration
 - Load all `.npz` files using `glob`
-- Mask zero-padded constituents using `pT > 0`
+- Mask zero-padded constituents using $p_T > 0$
 - Verify dataset balance and inspect constituent structure
 
 ### 2. Exploratory Analysis
 - **Particle Multiplicity Distribution** — quark vs gluon jets; gluon jets consistently show higher constituent counts
-- **Leading Constituent Kinematics** — pT and rapidity of the highest-pT particle per jet
+- **Leading Constituent Kinematics** — $p_T$ and rapidity of the highest-$p_T$ particle per jet
 
 ### 3. Jet Observable Computation
 
@@ -103,26 +103,26 @@ Three substructure observables are computed for each jet:
 Invariant mass of the jet computed from its constituent four-momenta. Gluon jets tend to have higher jet mass due to broader radiation.
 
 #### (ii) Jet Width
-pT-weighted mean angular distance of constituents from the jet axis:
+$p_T$-weighted mean angular distance of constituents from the jet axis:
 
 $$w = \frac{\sum_i p_{T,i} \cdot \Delta R_i}{\sum_i p_{T,i}}$$
 
 Gluon jets show a broader width distribution.
 
-#### (iii) pT Dispersion (p_T^D)
+#### (iii) $p_T$ Dispersion ($p_T^D$)
 Measures how evenly transverse momentum is shared among constituents:
 
 $$p_T^D = \frac{\sqrt{\sum_i p_{T,i}^2}}{\sum_i p_{T,i}}$$
 
-Quark jets (fewer, harder fragments) tend to have larger p_T^D; gluon jets (many softer particles) tend to have smaller values.
+Quark jets (fewer, harder fragments) tend to have larger $p_T^D$; gluon jets (many softer particles) tend to have smaller values.
 
 ### 4. Rest-Frame Transformation
 
 Each jet is boosted to its **center-of-mass (rest) frame** to isolate intrinsic geometric structure independent of the overall jet motion:
-- Constituent 4-momenta are constructed from (pT, y, φ)
+- Constituent 4-momenta are constructed from $(p_T, y, \varphi)$
 - The total jet 4-momentum is computed
-- All constituents are Lorentz-boosted using the jet's β vector
-- Rest-frame features (mass, width, pT dispersion, multiplicity) are extracted
+- All constituents are Lorentz-boosted using the jet's $\vec{\beta}$ vector
+- Rest-frame features (mass, width, $p_T$ dispersion, multiplicity) are extracted
 
 This removes boost-related correlations and allows the classifier to focus on intrinsic radiation patterns.
 
@@ -134,7 +134,7 @@ Four rest-frame features are extracted per jet:
 |---------|-----------------|
 | Jet mass | Total radiation scale |
 | Jet width | Angular spread of energy |
-| pT dispersion | Fragmentation hardness |
+| $p_T$ dispersion | Fragmentation hardness |
 | Multiplicity | Number of radiation particles |
 
 ### 6. Machine Learning Classification
@@ -162,10 +162,10 @@ Four rest-frame features are extracted per jet:
 |---------|-------------|
 | Jet mass | +0.219 |
 | Jet width | +0.107 |
-| pT dispersion | +0.603 |
+| $p_T$ dispersion | +0.603 |
 | Multiplicity | **−1.392** |
 
-The negative coefficient for multiplicity reflects that jets with more constituents are more likely to be gluon jets — consistent with QCD expectations.
+The negative coefficient for multiplicity reflects that jets with more constituents are more likely to be gluon jets — consistent with QCD expectations ($C_A > C_F$).
 
 ### Confusion Matrix (threshold = 0.5)
 
@@ -178,9 +178,9 @@ The negative coefficient for multiplicity reflects that jets with more constitue
 
 ## Key Findings
 
-1. **Multiplicity is the strongest discriminator** — particle count carries the most separation power between quark and gluon jets, consistent with QCD color factor differences.
+1. **Multiplicity is the strongest discriminator** — particle count carries the most separation power between quark and gluon jets, consistent with the QCD color factor hierarchy $C_A > C_F$.
 
-2. **pT dispersion provides complementary power** — reflecting differences in fragmentation hardness between the two jet types.
+2. **$p_T$ dispersion provides complementary power** — reflecting differences in fragmentation hardness between the two jet types.
 
 3. **Rest-frame analysis offers physical interpretability** — boosting to the center-of-mass frame removes kinematic correlations and highlights intrinsic geometric jet structure. Performance is comparable to lab-frame features, suggesting that most separation power originates from intrinsic radiation patterns rather than overall jet kinematics.
 
